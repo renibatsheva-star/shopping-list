@@ -1,0 +1,31 @@
+React
+License: MIT
+https://github.com/facebook/react/blob/main/LICENSE
+
+React DOM
+License: MIT
+https://github.com/facebook/react/blob/main/LICENSE
+
+Express
+License: MIT
+https://github.com/expressjs/express/blob/master/LICENSE
+
+Cors
+License: MIT
+https://github.com/expressjs/cors/blob/master/LICENSE
+
+Jest
+License: MIT
+https://github.com/jestjs/jest/blob/main/LICENSE
+
+Supertest
+License: MIT
+https://github.com/forwardemail/supertest/blob/master/LICENSE
+
+Vitest
+License: MIT
+https://github.com/vitest-dev/vitest/blob/main/LICENSE
+
+Vite
+License: MIT
+https://github.com/vitejs/vite/blob/main/LICENSE

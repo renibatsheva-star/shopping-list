@@ -3,10 +3,12 @@ import AddItem from "./components/AddItem";
 import ItemList from "./components/ItemList";
 import "./App.css";
 
+
 function App() {
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState("");
   const [items, setItems] = useState([]);
+  const [search, setSearch] = useState("");
 
   const getItems = async () => {
     const response = await fetch("http://localhost:5000/items");
@@ -19,6 +21,10 @@ function App() {
   }, []);
 
   const addItem = async () => {
+      if (!name.trim() || !quantity || Number(quantity) <= 0) {
+  alert("Please enter a valid product name and quantity.");
+  return;
+}
     await fetch("http://localhost:5000/items", {
       method: "POST",
       headers: {
@@ -36,15 +42,35 @@ function App() {
     getItems();
   };
 
-  const deleteItem = async (id) => {
-    await fetch(`http://localhost:5000/items/${id}`, {
-      method: "DELETE",
-    });
 
-    getItems();
-  };
+const deleteItem = async (id) => {
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this item?"
+  );
 
-  const updateItem = async (id, name, quantity) => {
+  if (!confirmDelete) {
+    return;
+  }
+
+  await fetch(`http://localhost:5000/items/${id}`, {
+    method: "DELETE",
+  });
+
+  getItems();
+};
+
+
+
+
+
+
+
+
+
+
+
+
+  const updateItem = async (id, name, quantity, bought) => {
     await fetch(`http://localhost:5000/items/${id}`, {
       method: "PUT",
       headers: {
@@ -53,11 +79,17 @@ function App() {
       body: JSON.stringify({
         name,
         quantity: Number(quantity),
+         bought
       }),
     });
 
     getItems();
+
   };
+
+  const filteredItems = items.filter((item) =>
+  item.name.toLowerCase().includes(search.toLowerCase())
+);
 
   return (
     <div className="container">
@@ -73,15 +105,24 @@ function App() {
 
       <hr />
 
+      
+
+      <input
+  type="text"
+  placeholder="Search item..."
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+/>
 
 
 
 
       <ItemList
-        items={items}
-        deleteItem={deleteItem}
-        updateItem={updateItem}
-      />
+  items={filteredItems}
+  deleteItem={deleteItem}
+  updateItem={updateItem}
+/>
+      
 
 
 

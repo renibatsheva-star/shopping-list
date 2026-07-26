@@ -1,80 +1,44 @@
 body {
   margin: 0;
-  background: #f4f6f9;
+  background: #f4f7fb;
   font-family: Arial, sans-serif;
 }
 
 .container {
-  width: 500px;
+  max-width: 700px;
   margin: 40px auto;
   background: white;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 h1 {
   text-align: center;
-  color: #333;
+  color: #2563eb;
+  margin-bottom: 30px;
 }
 
 input {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 12px;
+  margin-bottom: 15px;
   box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
 }
-
-button {
-  padding: 10px 15px;
-  margin-left: 5px;
-  cursor: pointer;
-}
-
-.add-btn {
-  background: #28a745;
-  color: white;
-  border: none;
-}
-
-.edit-btn {
-  background: #ffc107;
-  border: none;
-}
-
-.delete-btn {
-  background: #dc3545;
-  color: white;
-  border: none;
-}
-
-ul {
-  padding: 0;
-}
-
-li {
-  list-style: none;
-  background: #eeeeee;
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 5px;
-}
-
-
-
-
-
-
 
 button {
   padding: 10px 16px;
-  margin-left: 10px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-size: 15px;
   font-weight: bold;
   transition: 0.2s;
+  margin-right: 8px;
+  margin-top: 8px;
 }
 
 button:hover {
@@ -96,12 +60,36 @@ button:hover {
   color: white;
 }
 
-.add-btn {
-  background: #28a745;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 6px;
-  font-size: 16px;
+ul {
+  padding: 0;
+}
+
+li {
+  list-style: none;
+  background: white;
+  margin-bottom: 15px;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  transition: 0.2s;
+}
+
+li:hover {
+  transform: translateY(-2px);
+}
+
+.quantity {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 10px;
+  background: #eef5ff;
+  color: #2563eb;
+  border-radius: 20px;
+  font-size: 14px;
   font-weight: bold;
+}
+
+.bought {
+  text-decoration: line-through;
+  color: gray;
 }

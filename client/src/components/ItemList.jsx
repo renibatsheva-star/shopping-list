@@ -1,6 +1,9 @@
 import Item from "./Item";
 
 function ItemList({ items, deleteItem, updateItem }) {
+    if (items.length === 0) {
+  return <p>No items yet.</p>;
+}
   return (
     <>
       <h2>Products</h2>

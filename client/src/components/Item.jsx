@@ -6,9 +6,24 @@ function Item({ item, deleteItem, updateItem }) {
   const [quantity, setQuantity] = useState(item.quantity);
 
   const save = () => {
-    updateItem(item.id, name, quantity);
+  updateItem(item.id, name, quantity, item.bought);
     setEditing(false);
   };
+
+
+  const toggleBought = () => {
+  updateItem(
+    item.id,
+    item.name,
+    item.quantity,
+    !item.bought
+  );
+};
+
+
+
+
+
 
   if (editing) {
     return (
@@ -40,11 +55,34 @@ function Item({ item, deleteItem, updateItem }) {
           alignItems: "center",
         }}
       >
+        
         <div>
-          <strong>🛒 {item.name}</strong>
-          <br />
-          Quantity: {item.quantity}
-        </div>
+  <strong
+    style={{
+      textDecoration: item.bought ? "line-through" : "none",
+      color: item.bought ? "gray" : "black",
+    }}
+  >
+    🛒 {item.name}
+  </strong>
+
+  <br />
+
+  Quantity: {item.quantity}
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         <div>
           <button
@@ -53,6 +91,14 @@ function Item({ item, deleteItem, updateItem }) {
           >
             ✏️ Edit
           </button>
+
+
+          <button
+  className="add-btn"
+  onClick={toggleBought}
+>
+{item.bought ? "✅ Bought" : "☐ Mark as Bought"}</button>
+
 
           <button
             className="delete-btn"
