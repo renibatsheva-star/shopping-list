@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/shopping-list
 
 jobs:
   docker:
@@ -18,3 +19,5 @@ jobs:
 
       - name: Build Client Docker Image
         run: docker build -t shopping-client ./client
+
+
