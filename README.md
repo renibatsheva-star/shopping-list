@@ -28,7 +28,7 @@ The frontend was built with **React (Vite)** and the backend was built with **No
 - Input validation
 - REST API
 - Request logging
-- Backend unit tests with Jest and Supertest
+- Backend integration tests with Jest and Supertest
 - Docker support
 - Docker Compose
 - GitHub Actions CI workflow
@@ -38,28 +38,25 @@ The frontend was built with **React (Vite)** and the backend was built with **No
 ## Technologies
 
 ### Frontend
-
 - React
 - Vite
 - CSS
 
 ### Backend
-
 - Node.js
 - Express
 - Morgan
 - CORS
 
 ### Testing
-
 - Jest
 - Supertest
 
 ### DevOps
-
 - Docker
 - Docker Compose
 - GitHub Actions
+- Snyk
 
 ---
 
@@ -165,7 +162,7 @@ http://localhost:5173
 
 ## Running Tests
 
-Run backend tests:
+Run the backend tests:
 
 ```bash
 cd server
@@ -224,7 +221,7 @@ Application events such as:
 - Item deleted
 - Validation errors
 
-are written to a log file during runtime.
+are written to **server.log** during runtime.
 
 ---
 
@@ -261,6 +258,14 @@ If an item does not exist, the API returns:
 ```
 404 Not Found
 ```
+
+---
+
+## Security
+
+The project was scanned using **Snyk** to identify known vulnerabilities in project dependencies.
+
+The scan results were reviewed as part of the project's security validation process.
 
 ---
 
