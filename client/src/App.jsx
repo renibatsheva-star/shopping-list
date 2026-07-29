@@ -3,6 +3,7 @@ import AddItem from "./components/AddItem";
 import ItemList from "./components/ItemList";
 import "./App.css";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 function App() {
   const [name, setName] = useState("");
@@ -11,7 +12,13 @@ function App() {
   const [search, setSearch] = useState("");
 
   const getItems = async () => {
-    const response = await fetch("http://localhost:5000/items");
+    const response = await fetch(`${API_URL}/items`);
+
+    if (!response.ok) {
+      console.error("Failed to fetch items");
+      return;
+    }
+
     const data = await response.json();
     setItems(data);
   };
@@ -21,11 +28,12 @@ function App() {
   }, []);
 
   const addItem = async () => {
-      if (!name.trim() || !quantity || Number(quantity) <= 0) {
-  alert("Please enter a valid product name and quantity.");
-  return;
-}
-    await fetch("http://localhost:5000/items", {
+    if (!name.trim() || !quantity || Number(quantity) <= 0) {
+      alert("Please enter a valid product name and quantity.");
+      return;
+    }
+
+    const response = await fetch(`${API_URL}/items`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -36,42 +44,40 @@ function App() {
       }),
     });
 
+    if (!response.ok) {
+      alert("Failed to add item.");
+      return;
+    }
+
     setName("");
     setQuantity("");
 
     getItems();
   };
 
+  const deleteItem = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this item?"
+    );
 
-const deleteItem = async (id) => {
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete this item?"
-  );
+    if (!confirmDelete) {
+      return;
+    }
 
-  if (!confirmDelete) {
-    return;
-  }
+    const response = await fetch(`${API_URL}/items/${id}`, {
+      method: "DELETE",
+    });
 
-  await fetch(`http://localhost:5000/items/${id}`, {
-    method: "DELETE",
-  });
+    if (!response.ok) {
+      alert("Failed to delete item.");
+      return;
+    }
 
-  getItems();
-};
-
-
-
-
-
-
-
-
-
-
-
+    getItems();
+  };
 
   const updateItem = async (id, name, quantity, bought) => {
-    await fetch(`http://localhost:5000/items/${id}`, {
+    const response = await fetch(`${API_URL}/items/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -79,17 +85,21 @@ const deleteItem = async (id) => {
       body: JSON.stringify({
         name,
         quantity: Number(quantity),
-         bought
+        bought,
       }),
     });
 
-    getItems();
+    if (!response.ok) {
+      alert("Failed to update item.");
+      return;
+    }
 
+    getItems();
   };
 
   const filteredItems = items.filter((item) =>
-  item.name.toLowerCase().includes(search.toLowerCase())
-);
+    item.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="container">
@@ -105,30 +115,18 @@ const deleteItem = async (id) => {
 
       <hr />
 
-      
-
       <input
-  type="text"
-  placeholder="Search item..."
-  value={search}
-  onChange={(e) => setSearch(e.target.value)}
-/>
-
-
-
+        type="text"
+        placeholder="Search item..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
 
       <ItemList
-  items={filteredItems}
-  deleteItem={deleteItem}
-  updateItem={updateItem}
-/>
-      
-
-
-
-
-
-
+        items={filteredItems}
+        deleteItem={deleteItem}
+        updateItem={updateItem}
+      />
     </div>
   );
 }

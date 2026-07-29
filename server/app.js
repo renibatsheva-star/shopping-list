@@ -21,7 +21,8 @@ function writeLog(message) {
   fs.appendFileSync(path.join(__dirname, "server.log"), log);
 }
 
-const filePath = path.join(__dirname, "items.json");
+const filePath =
+  process.env.ITEMS_FILE || path.join(__dirname, "items.json");
 
 function getItems() {
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
@@ -29,6 +30,21 @@ function getItems() {
 
 function saveItems(items) {
   fs.writeFileSync(filePath, JSON.stringify(items, null, 2));
+}
+
+// Shared validation function
+function validateItem(name, quantity) {
+  if (typeof name !== "string" || !name.trim()) {
+    return "Product name is required.";
+  }
+
+  const parsedQuantity = Number(quantity);
+
+  if (!Number.isFinite(parsedQuantity) || parsedQuantity <= 0) {
+    return "Quantity must be greater than 0.";
+  }
+
+  return null;
 }
 
 app.get("/", (req, res) => {
@@ -46,18 +62,11 @@ app.post("/items", (req, res) => {
 
   const { name, quantity } = req.body;
 
-  if (!name || !name.trim()) {
-    writeLog("POST /items - Validation failed: Product name is required");
-    return res.status(400).json({
-      message: "Product name is required.",
-    });
-  }
+  const error = validateItem(name, quantity);
 
-  if (!quantity || Number(quantity) <= 0) {
-    writeLog("POST /items - Validation failed: Quantity must be greater than 0");
-    return res.status(400).json({
-      message: "Quantity must be greater than 0.",
-    });
+  if (error) {
+    writeLog(`POST /items - Validation failed: ${error}`);
+    return res.status(400).json({ message: error });
   }
 
   const newItem = {
@@ -90,18 +99,11 @@ app.put("/items/:id", (req, res) => {
 
   const { name, quantity, bought } = req.body;
 
-  if (!name || !name.trim()) {
-    writeLog(`PUT /items/${id} - Validation failed: Product name is required`);
-    return res.status(400).json({
-      message: "Product name is required.",
-    });
-  }
+  const error = validateItem(name, quantity);
 
-  if (!quantity || Number(quantity) <= 0) {
-    writeLog(`PUT /items/${id} - Validation failed: Quantity must be greater than 0`);
-    return res.status(400).json({
-      message: "Quantity must be greater than 0.",
-    });
+  if (error) {
+    writeLog(`PUT /items/${id} - Validation failed: ${error}`);
+    return res.status(400).json({ message: error });
   }
 
   item.name = name.trim();
