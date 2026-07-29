@@ -1,12 +1,21 @@
 const request = require("supertest");
 const fs = require("fs");
 const path = require("path");
+
+const testFilePath = path.join(__dirname, "test-items.json");
+
+process.env.ITEMS_FILE = testFilePath;
+
 const app = require("./app");
 
-const filePath = path.join(__dirname, "items.json");
-
 beforeEach(() => {
-  fs.writeFileSync(filePath, "[]");
+  fs.writeFileSync(testFilePath, "[]");
+});
+
+afterAll(() => {
+  if (fs.existsSync(testFilePath)) {
+    fs.unlinkSync(testFilePath);
+  }
 });
 
 describe("Shopping List API", () => {
@@ -122,52 +131,48 @@ describe("Shopping List API", () => {
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe("Quantity must be greater than 0.");
   });
-});
 
+  test("PUT /items/:id should return 400 when name is missing", async () => {
+    const created = await request(app)
+      .post("/items")
+      .send({
+        name: "Milk",
+        quantity: 2,
+      });
 
+    const id = created.body.id;
 
+    const response = await request(app)
+      .put(`/items/${id}`)
+      .send({
+        name: "",
+        quantity: 2,
+        bought: false,
+      });
 
-test("PUT /items/:id should return 400 when name is missing", async () => {
-  const created = await request(app)
-    .post("/items")
-    .send({
-      name: "Milk",
-      quantity: 2,
-    });
+    expect(response.statusCode).toBe(400);
+    expect(response.body.message).toBe("Product name is required.");
+  });
 
-  const id = created.body.id;
+  test("PUT /items/:id should return 400 when quantity is invalid", async () => {
+    const created = await request(app)
+      .post("/items")
+      .send({
+        name: "Milk",
+        quantity: 2,
+      });
 
-  const response = await request(app)
-    .put(`/items/${id}`)
-    .send({
-      name: "",
-      quantity: 2,
-      bought: false,
-    });
+    const id = created.body.id;
 
-  expect(response.statusCode).toBe(400);
-  expect(response.body.message).toBe("Product name is required.");
-});
+    const response = await request(app)
+      .put(`/items/${id}`)
+      .send({
+        name: "Milk",
+        quantity: 0,
+        bought: false,
+      });
 
-
-test("PUT /items/:id should return 400 when quantity is invalid", async () => {
-  const created = await request(app)
-    .post("/items")
-    .send({
-      name: "Milk",
-      quantity: 2,
-    });
-
-  const id = created.body.id;
-
-  const response = await request(app)
-    .put(`/items/${id}`)
-    .send({
-      name: "Milk",
-      quantity: 0,
-      bought: false,
-    });
-
-  expect(response.statusCode).toBe(400);
-  expect(response.body.message).toBe("Quantity must be greater than 0.");
+    expect(response.statusCode).toBe(400);
+    expect(response.body.message).toBe("Quantity must be greater than 0.");
+  });
 });

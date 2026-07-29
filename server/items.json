@@ -1,3 +1,8 @@
 [
- 
+  {
+    "id": 1785263696699,
+    "name": "Milk",
+    "quantity": 2,
+    "bought": false
+  }
 ]
